@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>
+            汪喵贴图板
+        </title>
+        <link rel="stylesheet" href="static/index.css">
+    </head>
+    <body>
+        <h1>汪喵贴图板</h1>
+        <ul class="nav nav-tabs">
+            <li role="presentation"><a href="/dog">>>>汪<<<</a></li>
+            <li role="presentation"><a href="/cat">>>>喵<<<</a></li>
+            <li role="presentation"><a href="/other">>>>其他<<<</a></li>
+        </ul>
+        <hr>
+        <ol class="feed">
+            {% for m in ms %}
+            <li class="item">
+                <div class="img_id">
+                    #{{ m.img_id }}
+                </div>
+                <div class="row">
+                    <div class="post_info">
+                        <label class="user_name">{{ m.author }}</label>
+                        <!-- <label class="timestamp">12小时前</label> -->
+                    </div>
+                    <div class="text">
+                        {% for u in m.url %}
+                        <img src="{{ u }}" alt="">
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="comment">
+                    <a href="" id="ok">我觉得可以 - {{ m.ok }}</a>
+                    <a href="" id="no">我觉得不行 - {{ m.no }}</a>
+                    <a href="" id="comment">吐槽 - 55</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ol> 
+        <div class="right-side">
+            投稿方式：<br>
+            将图片链接贴到下方输入框<br>
+            一次提交多个链接用英文分号（;）分割
+            <hr>
+            给自己取一个名字？
+            <input type="text">
+            <button>决定</button>
+            <br>
+            <textarea class="post" name="post" id="" cols="55" rows="10"></textarea>
+            <button>提交</button>
+            <hr>
+            注意：请遵守当地法律法规，不要提交过激图片，网站管理员有权对不合规图片进行删除。
+        </div>
+    </body> 
+</html>

@@ -1,0 +1,82 @@
+body {
+    width: 1200px;
+    margin: auto;
+}
+.nav>li {
+    list-style-type: none;
+    display: inline;
+    background-color: #DDD;
+    padding: 3px 5px 3px 5px;
+}
+.nav>li:hover {
+    list-style-type: none;
+    display: inline;
+    background-color: #BBB;
+    padding: 3px 5px 3px 5px;
+}
+
+.feed {
+    border-right: #DDD 1px solid;
+    width: 600px;
+    max-height: 60000px;
+    display: block;
+    float: left;
+}
+.right-side {
+    width: 400px;
+    display: block;
+    float: left;
+    margin-left: 20px;
+}
+.right-side>.post {
+    float: left;
+}
+
+.item {
+    width: 600px;
+    display: block;
+    margin-bottom: 20px;
+    border-bottom: 1px #DDD solid;
+    padding-bottom: 10px;
+}
+.item img {
+    max-width: 450px;
+}
+.item .post_info {
+    width: 100px;
+    vertical-align: top;
+    display: inline-block;
+}
+.item .img_id {
+    font-size: 13px;
+    color: #999;
+}
+.post_info>.user_name {
+    display: block;
+    font-weight: 600;
+    margin: 5 0 5 0;
+}
+.post_info>.timestamp {
+    font-size: 13px;
+    color: #999;
+}
+.item .text {
+    display: inline-block;
+    width: 450px;
+}
+.text>img {
+    margin-bottom: 3px;
+}
+.comment>a {
+    color: #000;
+    text-decoration: none;
+}
+.comment>#ok {
+    color: #F08;
+}
+.comment>#no {
+    color: #6BF;
+}
+.comment>#ok:hover, .comment>#no:hover {
+    font-weight: 600;
+}
