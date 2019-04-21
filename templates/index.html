@@ -1,10 +1,12 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>
             汪喵贴图板
         </title>
-        <link rel="stylesheet" href="static/index.css">
-    </head>
+        <link rel="stylesheet" href="/static/index.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script type="text/javascript" src="/static/js/api.js"></script>
     <body>
         <h1>汪喵贴图板</h1>
         <ul class="nav nav-tabs">
@@ -38,19 +40,21 @@
             </li>
             {% endfor %}
         </ol> 
-        <div class="right-side">
+        <div class="right-side" id="app">
             投稿方式：<br>
             将图片链接贴到下方输入框<br>
             一次提交多个链接用英文分号（;）分割
             <hr>
             给自己取一个名字？
-            <input type="text">
+            <input type="text" id="author">
             <button>决定</button>
             <br>
-            <textarea class="post" name="post" id="" cols="55" rows="10"></textarea>
-            <button>提交</button>
+            <textarea class="post" name="post" id="url-text" cols="55" rows="10"></textarea>
+            <button v-on:click="submitUrl">提交</button>
             <hr>
             注意：请遵守当地法律法规，不要提交过激图片，网站管理员有权对不合规图片进行删除。
         </div>
+        <script type="text/javascript" src="/static/js/vue.js"></script>
+    </head>
     </body> 
 </html>
