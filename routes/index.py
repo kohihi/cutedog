@@ -50,6 +50,7 @@ def dog():
 @main.route('/cat')
 def cat():
     # key = data.get("key")
+    # 这个 key 是什么东西？
     key = True
     # 验证密钥
     if key is True:
@@ -81,17 +82,3 @@ def other():
     else:
         ms = None
     return render_template('index.html', ms=ms)
-
-
-@main.route('/post', methods=["POST"])
-def post():
-    data = request.get_json()
-    m_data = dict()
-    m_data['author'] = data.get('author', 'Anonymous')
-    m_data['img_id'] = Count.get_number(Wang)
-    m_data['board'] = data.get('board', 3)
-    m_data['url'] = data.get('url').split(";")
-    m_data['visible'] = False
-    wang = Wang.new(m_data)
-    wang.save()
-    return "ok"
