@@ -20,7 +20,7 @@ def index():
             pass
         else:
             page = int(request.args.get("page"))
-        ms = Image.objects(visible=True).paginate(page=page, per_page=20).items
+        ms = Image.objects(visible=True,).exclude('ok_list', 'no_list').paginate(page=page, per_page=20).items
     else:
         ms = None
     return render_template('index.html', ms=ms)

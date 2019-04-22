@@ -15,15 +15,55 @@ def post():
     author = data.get('author')
     if author in ["", None]:
         author = 'Anonymous'
-    wang = Image(
+    image = Image(
         img_id=Count.get_number(Image),
         author=author,
         board=data.get('board', 'other'),
         url=data.get('url').split(";"),
         visible=False,
     )
-    wang.save()
+    image.save()
     r = dict(
         code=0
     )
     return json.dumps(r)
+
+
+@main.route('/vote', methods=["PUT"])
+def vote():
+    """
+    正负反馈api
+    :return:
+    00000-反馈成功
+    10001-图片不存在
+    10002-已经反馈过了
+    10003-意料之外的参数类型
+    """
+    data = request.get_json()
+    img_id = data.get('img_id')
+    client_ip = request.remote_addr
+    print(client_ip)
+    vote_type = data.get('type')
+    image = Image.objects(img_id=img_id).first()
+    if not image:
+        r = json.dumps(dict(
+            code=10001,
+        ))
+    if client_ip in image.ok_list or client_ip in image.no_list:
+        return json.dumps(dict(
+            code=10002,
+        ))
+    if vote_type is 1:
+        # 我觉得ok
+        image.update(push__ok_list=client_ip, ok=image.ok+1)
+    elif vote_type is 0:
+        # 我觉得不行
+        image.update(push__no_list=client_ip, no=image.no+1)
+    else:
+        return json.dumps(dict(
+            code=10003
+        ))
+
+    return json.dumps(dict(
+        code=0
+    ))

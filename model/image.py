@@ -17,6 +17,8 @@ class Image(db.Document):
     url = db.ListField(db.StringField())
     author = db.StringField()
     board = db.StringField()
+    ok_list = db.ListField(db.StringField())
+    no_list = db.ListField(db.StringField())
     ok = db.IntField(default=0)
     no = db.IntField(default=0)
     comments = db.ListField(db.EmbeddedDocumentField(Comment))
