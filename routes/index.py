@@ -3,9 +3,8 @@ from flask import (
     request,
     render_template
 )
-from model.wang import Wang
-from model.count import Count
-import json
+from model.image import Image
+
 
 main = Blueprint('index', __name__)
 
@@ -21,11 +20,9 @@ def index():
             pass
         else:
             page = int(request.args.get("page"))
-        # ms = Wang.find_paginate(page=page, pre=20)
-        ms = Wang.find_paginate(20, page, deleted=False, visible=True)
+        ms = Image.objects(visible=True).paginate(page=page, per_page=20).items
     else:
         ms = None
-    print("MS is:", ms)
     return render_template('index.html', ms=ms)
 
 
@@ -41,7 +38,7 @@ def dog():
         else:
             page = int(request.args.get("page"))
         # ms = Wang.find_paginate(page=page, pre=20)
-        ms = Wang.find_paginate(20, page, deleted=False, board=1, visible=True)
+        ms = Image.objects(board='dog', visible=True).paginate(page=page, per_page=20).items
     else:
         ms = None
     return render_template('index.html', ms=ms)
@@ -60,7 +57,7 @@ def cat():
         else:
             page = int(request.args.get("page"))
         # ms = Wang.find_paginate(page=page, pre=20)
-        ms = Wang.find_paginate(20, page, deleted=False, board=2, visible=True)
+        ms = Image.objects(board='cat', visible=True).paginate(page=page, per_page=20).items
     else:
         ms = None
     return render_template('index.html', ms=ms)
@@ -78,7 +75,7 @@ def other():
         else:
             page = int(request.args.get("page"))
         # ms = Wang.find_paginate(page=page, pre=20)
-        ms = Wang.find_paginate(20, page, deleted=False, board=3, visible=True)
+        ms = Image.objects(board='other', visible=True).paginate(page=page, per_page=20).items
     else:
         ms = None
     return render_template('index.html', ms=ms)
