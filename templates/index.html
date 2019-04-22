@@ -37,7 +37,12 @@
                 <div class="comment" data-imgId={{ m.img_id }}>
                     <a id="ok" v-on:click="voteOk">我觉得可以 - {{ m.ok }}</a>
                     <a id="no" v-on:click="voteNo">我觉得不行 - {{ m.no }}</a>
-                    <a id="comment">吐槽 - 55</a>
+                    <a id="comment">吐槽 - {{ m.comments|length }}</a>
+                    {% for c in m.comments %}
+                    <li>
+                        {{ c.author }} - {{ c.content }}
+                    </li>
+                    {% endfor %}
                 </div>
             </li>
             {% endfor %}

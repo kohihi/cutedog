@@ -3,8 +3,8 @@ from datetime import datetime
 
 
 class Comment(db.EmbeddedDocument):
-    content = db.StringField()
-    name = db.StringField(max_length=120)
+    content = db.StringField(max_length=512)
+    author = db.StringField()
 
 
 class Image(db.Document):

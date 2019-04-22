@@ -4,7 +4,10 @@ from flask import (
 )
 import json
 from model.count import Count
-from model.image import Image
+from model.image import (
+    Image,
+    Comment,
+)
 
 main = Blueprint('api', __name__)
 
@@ -46,7 +49,7 @@ def vote():
     vote_type = data.get('type')
     image = Image.objects(img_id=img_id).first()
     if not image:
-        r = json.dumps(dict(
+        return json.dumps(dict(
             code=10001,
         ))
     if client_ip in image.ok_list or client_ip in image.no_list:
@@ -66,4 +69,27 @@ def vote():
 
     return json.dumps(dict(
         code=0
+    ))
+
+
+@main.route('/image/comment', methods=["POST"])
+def submit_comment():
+    data = request.get_json()
+    author = data.get('author')
+    if author in ["", None]:
+        author = 'Anonymous'
+    img_id = data.get('img_id')
+    image = Image.objects(img_id=img_id).first()
+    if not image:
+        return json.dumps(dict(
+            code=10001,
+        ))
+    content = data.get('comment')
+    comment = Comment(
+        author=author,
+        content=content,
+    )
+    image.update(push__comments=comment)
+    return json.dumps(dict(
+        code=0,
     ))
