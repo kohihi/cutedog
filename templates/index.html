@@ -7,7 +7,9 @@
         <link rel="stylesheet" href="/static/index.css">
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script type="text/javascript" src="/static/js/api.js"></script>
+    </head>
     <body>
+    <div id="app">
         <h1>汪喵贴图板</h1>
         <ul class="nav nav-tabs">
             <li role="presentation"><a href="/dog">>>>汪<<<</a></li>
@@ -32,15 +34,15 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="comment">
-                    <a href="" id="ok">我觉得可以 - {{ m.ok }}</a>
-                    <a href="" id="no">我觉得不行 - {{ m.no }}</a>
-                    <a href="" id="comment">吐槽 - 55</a>
+                <div class="comment" data-imgId={{ m.img_id }}>
+                    <a id="ok" v-on:click="voteOk">我觉得可以 - {{ m.ok }}</a>
+                    <a id="no" v-on:click="voteNo">我觉得不行 - {{ m.no }}</a>
+                    <a id="comment">吐槽 - 55</a>
                 </div>
             </li>
             {% endfor %}
         </ol> 
-        <div class="right-side" id="app">
+        <div class="right-side">
             投稿方式：<br>
             将图片链接贴到下方输入框<br>
             一次提交多个链接用英文分号（;）分割
@@ -54,7 +56,7 @@
             <hr>
             注意：请遵守当地法律法规，不要提交过激图片，网站管理员有权对不合规图片进行删除。
         </div>
-        <script type="text/javascript" src="/static/js/vue.js"></script>
-    </head>
+    </div>
+    <script type="text/javascript" src="/static/js/vue.js"></script>
     </body> 
 </html>
