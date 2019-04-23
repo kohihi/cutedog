@@ -12,10 +12,18 @@
     <div id="app">
         <h1>汪喵贴图板</h1>
         <ul class="nav nav-tabs">
-            <li role="presentation"><a href="/">>>ALL<<</a></li>
-            <li role="presentation"><a href="/dog">>>>汪<<<</a></li>
-            <li role="presentation"><a href="/cat">>>>喵<<<</a></li>
-            <li role="presentation"><a href="/other">>>>其他<<<</a></li>
+            <li role="presentation">
+                <a href="/#all" v-on:click="getImg(1, 'all')">>>ALL<<</a>
+            </li>
+            <li role="presentation">
+                <a href="/#dog" v-on:click="getImg(1, 'dog')">>>>汪<<<</a>
+            </li>
+            <li role="presentation">
+                <a href="/#cat" v-on:click="getImg(1, 'cat')">>>>喵<<<</a>
+            </li>
+            <li role="presentation">
+                <a href="/#other" v-on:click="getImg(1, 'other')">>>>其他<<<</a>
+            </li>
         </ul>
         <hr>
         <ol class="feed">

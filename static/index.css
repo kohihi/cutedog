@@ -10,13 +10,16 @@ body {
 .nav>li {
     list-style-type: none;
     display: inline;
-    background-color: #DDD;
+    background-color: #EEE;
     padding: 3px 5px 3px 5px;
+}
+.nav>li>a {
+    text-decoration: none;
 }
 .nav>li:hover {
     list-style-type: none;
     display: inline;
-    background-color: #BBB;
+    background-color: #DDD;
     padding: 3px 5px 3px 5px;
 }
 

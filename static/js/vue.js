@@ -10,10 +10,11 @@ var app = new Vue({
 		this.getImg()
 	},
 	methods: {
-		getImg: function(page) {
+		getImg: function(page, board) {
 			var path = `/api/image`
 			var data = {
-				"page": page
+				"page": page,
+				"board": board
 			}
 			var that = this
 			ajax("GET", path, data, function(r) {
