@@ -12,8 +12,8 @@ from model.image import (
 main = Blueprint('api', __name__)
 
 
-@main.route('/image', methods=["POST"])
-def post():
+@main.route('/image', methods=['POST'])
+def post_image():
     data = request.get_json()
     author = data.get('author')
     if author in ["", None]:
@@ -32,7 +32,7 @@ def post():
     return json.dumps(r)
 
 
-@main.route('/vote', methods=["PUT"])
+@main.route('/vote', methods=['PUT'])
 def vote():
     """
     正负反馈api
@@ -45,7 +45,6 @@ def vote():
     data = request.get_json()
     img_id = data.get('img_id')
     client_ip = request.remote_addr
-    print(client_ip)
     vote_type = data.get('type')
     image = Image.objects(img_id=img_id).first()
     if not image:
@@ -72,8 +71,8 @@ def vote():
     ))
 
 
-@main.route('/image/comment', methods=["POST"])
-def submit_comment():
+@main.route('/image/comment', methods=['POST'])
+def post_comment():
     data = request.get_json()
     author = data.get('author')
     if author in ["", None]:
@@ -92,4 +91,38 @@ def submit_comment():
     image.update(push__comments=comment)
     return json.dumps(dict(
         code=0,
+    ))
+
+
+@main.route('/image', methods=['GET'])
+def get_image():
+    query_set = dict(
+        visible=True,
+    )
+    if request.args.get('board') in ("cat", "dog", "other"):
+        query_set['board'] = request.args.get('board')
+
+    page = request.args.get('page')
+    if type(page) is not int:
+        page = 1
+    ms = Image.objects(**query_set).exclude('ok_list', 'no_list',).paginate(page=page, per_page=20).items
+    data = [m.api_data() for m in ms]
+    return json.dumps(dict(
+        code=0,
+        data=data,
+    ))
+
+
+@main.route('/image/comment', methods=['GET'])
+def get_comment():
+    img_id = request.args.get("img_id")
+    image = Image.objects(img_id=img_id).first()
+    if not image:
+        return json.dumps(dict(
+            code=10001
+        ))
+    data = [c.api_data() for c in image.comments]
+    return json.dumps(dict(
+        code=0,
+        data=data,
     ))
