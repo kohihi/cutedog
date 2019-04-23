@@ -26,8 +26,19 @@
             </li>
         </ul>
         <hr>
+        <transition name="fade">
+        <div class="paginate-nav">
+            <a v-if="current_page > 1" @click="setPage('prev')">上一页</a>
+            <a v-if="current_page > 2" @click="setPage(current_page-2)">{{current_page - 2}}</a>
+            <a v-if="current_page > 1" @click="setPage(current_page-1)">{{current_page - 1}}</a>
+            <span>[{{current_page}}]</span>
+            <a v-if="max_page > 0" @click="setPage(current_page+1)">{{current_page + 1}}</a>
+            <a v-if="max_page > 1" @click="setPage(current_page+2)">{{current_page + 2}}</a>
+            <a v-if="max_page > 0" @click="setPage('next')">下一页</a>
+        </div>
+        </transition>
         <ol class="feed">
-            <li class="item" v-for="img in imgList" :key="img.img_id">
+            <li class="item" v-for="(img, index) in imgList" :key="img.img_id">
                 <div class="img_id">
                     #{{img.img_id}}
                 </div>
@@ -42,8 +53,8 @@
                 </div>
                 <div class="comment" :data-imgId="img.img_id">
                     <div style="text-align: right; padding-right: 50px; margin: 5px 0px 10px 0px;">
-                        <a id="ok" class="a-button" v-on:click="voteOk">我觉得可以 {{img.ok}}</a>
-                        <a id="no" class="a-button" v-on:click="voteNo"> / 我觉得不行 {{img.no}}</a>
+                        <a id="ok" class="a-button" v-on:click="voteOk(index, $event)">我觉得可以 {{img.ok}}</a>
+                        <a id="no" class="a-button" v-on:click="voteNo(index, $event)"> / 我觉得不行 {{img.no}}</a>
                         <a id="comment" class="a-button" v-on:click="getComments"> / 吐槽 {{img.comments_num}}</a>
                     </div>
                     <transition name="fade">
@@ -52,24 +63,42 @@
                             <label class="user_name">{{c.author}}</label>
                             <span>{{c.content}}</span>
                         </div>
+                        <div class="comment-submit">
+                            <textarea class="post" name="post" cols="55" rows="10" :id="'CTA-'+img.img_id"></textarea>
+                            <button v-on:click="submitComment(img.img_id)" class="button-submit">提交</button>
+                        </div>
                     </div>
                     </transition>
                 </div>
             </li>
-        </ol> 
+            <transition name="fade">
+            <div class="paginate-nav">
+                <a v-if="current_page > 1" @click="setPage('prev')">上一页</a>
+                <a v-if="current_page > 2" @click="setPage(current_page-2)">{{current_page - 2}}</a>
+                <a v-if="current_page > 1" @click="setPage(current_page-1)">{{current_page - 1}}</a>
+                <span>[{{current_page}}]</span>
+                <a v-if="max_page > 0" @click="setPage(current_page+1)">{{current_page + 1}}</a>
+                <a v-if="max_page > 1" @click="setPage(current_page+2)">{{current_page + 2}}</a>
+                <a v-if="max_page > 0" @click="setPage('next')">下一页</a>
+            </div>
+            </transition>
+        </ol>
+
         <div class="right-side">
-            投稿方式：<br>
-            将图片链接贴到下方输入框<br>
-            一次提交多个链接用英文分号 ; 分割
+            Hello, <b>{{author}}</b><br>
+            <input type="text" id="author" placeholder="换个名字？在这里输入..." maxlength="16">
+            <button @click="setAuthor">决定</button>
             <hr>
-            给自己取一个名字？
-            <input type="text" id="author">
-            <button>决定</button>
+            <li>投稿方式：将图片链接贴到下方输入框，提交后等待更新。</li>
+            <li>一次提交多个链接用英文分号“;”分割。</li>
+            <li>网站的主题是猫猫狗狗与其他可爱动物。</li>
             <br>
             <textarea class="post" name="post" id="url-text" cols="55" rows="10"></textarea>
-            <button v-on:click="submitUrl">提交</button>
+            <button v-on:click="submitUrl" class="button-submit">提交</button>
             <hr>
-            注意：请遵守当地法律法规，不要提交过激图片，网站管理员有权对不合规图片进行删除。
+            <li>
+            本页面图片皆为用户发布，适用避风港原则。如有涉嫌侵权图片，请邮件联系admin@xxxxxxx.com，告知图片URL或者图片所在楼层(右上角的)编号以及侵权证据。
+            </li>
         </div>
     </div>
     <script type="text/javascript" src="/static/js/vue.js"></script>

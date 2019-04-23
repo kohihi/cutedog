@@ -22,6 +22,33 @@ body {
     background-color: #DDD;
     padding: 3px 5px 3px 5px;
 }
+.paginate-nav>a, .paginate-nav>span {
+    cursor: pointer;
+    background-color: #DDD;
+    width: 70px;
+    height: 25px;
+    font-size: 18px;
+    text-align: center;
+    padding-top: 0px;
+    display: inline-block;
+    color: white;
+}
+.paginate-nav>a:hover, .paginate-nav>span:hover {
+    background-color: #EEE;
+    /*width: 70px;
+    height: 25px;
+    font-size: 18px;
+    text-align: center;
+    padding-top: 0px;
+    display: inline-block;
+    color: white;*/
+}
+.paginate-nav>span {
+    color: #666;
+}
+.paginate-nav>span:hover {
+    background-color: #DDD;
+}
 
 .feed {
     border-right: #DDD 1px solid;
@@ -101,6 +128,21 @@ body {
 .comments>span {
     margin-left: 5px;
     margin-top: 8px;
+}
+.comment-submit>.post {
+    width: 590px;
+}
+.comment-submit>button {
+    width: 595px;
+}
+.button-submit {
+    margin-top: 3px;
+    width: 408px;
+    height: 35px;
+    background: #DDD;
+    border: none;
+    color: #666;
+    font-size: 22px;
 }
 
 /* ↓↓↓↓过渡动画效果↓↓↓↓ */

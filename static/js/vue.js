@@ -4,13 +4,18 @@ var app = new Vue({
 		message: 'Hello Vue!',
 		show: {},
 		imgList: [],
-		comments: {}
+		comments: {},
+		current_page: 0,
+		max_page: 0,
+		current_board: 'all',
+		author: 'Anonymous'
 	},
 	mounted() {
-		this.getImg()
+		this.getImg(1)
+		this.author = getCookie('author')
 	},
 	methods: {
-		getImg: function(page, board) {
+		getImg: function(page, board='all') {
 			var path = `/api/image`
 			var data = {
 				"page": page,
@@ -21,6 +26,9 @@ var app = new Vue({
 				r = JSON.parse(r)
 				if (r.code == 0) {
 					that.imgList = r.data
+					that.current_page = page
+					that.current_board = board
+					that.max_page = r.next
 				} else {
 					alert(code)
 				}
@@ -46,10 +54,13 @@ var app = new Vue({
 
 		submitUrl: function() {
 			var url = e("#url-text").value
-			var author = e("#author").value
+			const regex = /^\s*$/
+			if (regex.test(url)) {
+				return
+			}
 			var data = {
 				"url": url,
-				"author": author
+				"author": this.author
 			}
 			var path = `/api/image`
 			ajax("POST", path, data, function(r) {
@@ -60,17 +71,45 @@ var app = new Vue({
                     alert("not ok")
                 }
 			})
+			e("#url-text").value = ""
 		},
 
-		voteOk: function(event) {
+		submitComment: function(img_id) {
+			var content = e("#CTA-"+img_id).value
+			const regex = /^\s*$/
+			if (regex.test(content)) {
+				return
+			}
+			var data = {
+				"img_id": img_id,
+				"author": this.author,
+				"content": content
+			}
+			var path = `/api/image/comment`
+			var that = this
+			ajax("POST", path, data, function(r) {
+				r = JSON.parse(r)
+				if (r.code == 0) {
+                    alert("ok")
+                    that.comments[img_id].push(r.data)
+                    e("#CTA-"+img_id).value = ""
+                } else {
+                    alert("not ok:" + r.code)
+                }
+			})
+		},
+
+		voteOk: function(index, event) {
 			var data = {
 				"img_id": parseInt(event.target.parentElement.parentElement.dataset.imgid),
 				"type": 1,
 			}
 			var path = `/api/vote`
+			var that = this
 			ajax("PUT", path, data, function(r) {
 				r = JSON.parse(r)
 				if (r.code == 0) {
+					that.imgList[index].ok += 1
 					alert("投票成功")
 				} else {
 					alert(r.code)
@@ -79,7 +118,7 @@ var app = new Vue({
 			})
 		},
 
-		voteNo: function(event) {
+		voteNo: function(index, event) {
 			var data = {
 				"img_id": parseInt(event.target.parentElement.parentElement.dataset.imgid),
 				"type": 0,
@@ -88,13 +127,37 @@ var app = new Vue({
 			ajax("PUT", path, data, function(r) {
 				r = JSON.parse(r)
 				if (r.code == 0) {
+					that.imgList[index].no += 1
 					alert("投票成功")
 				} else {
 					alert(r.code)
 				}
 
 			})
-		}
+		},
+
+		setPage: function(page) {
+			window.scroll(0, 0)
+			if (page == "next") {
+				this.getImg(this.current_page+1, this.board)
+			} else if (page == "prev") {
+				this.getImg(this.current_page-1, this.board)
+			} else {
+				this.getImg(page, this.board)
+			}
+		},
+
+		setAuthor: function() {
+			var a = e("#author").value
+			const regex = /^\s*$/
+			if (regex.test(a)) {
+				alert("名字不能全是空白符")
+				return
+			}
+			setCookie("author", a, 365)
+			this.author = a
+			e("#author").value = ""
+		},
 	}
 })
 

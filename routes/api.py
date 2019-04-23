@@ -83,7 +83,7 @@ def post_comment():
         return json.dumps(dict(
             code=10001,
         ))
-    content = data.get('comment')
+    content = data.get('content')
     comment = Comment(
         author=author,
         content=content,
@@ -91,6 +91,7 @@ def post_comment():
     image.update(push__comments=comment)
     return json.dumps(dict(
         code=0,
+        data=comment.api_data(),
     ))
 
 
@@ -102,14 +103,23 @@ def get_image():
     if request.args.get('board') in ("cat", "dog", "other"):
         query_set['board'] = request.args.get('board')
 
-    page = request.args.get('page')
-    if type(page) is not int:
+    try:
+        page = int(request.args.get('page'))
+    except ValueError as e:
         page = 1
-    ms = Image.objects(**query_set).exclude('ok_list', 'no_list',).paginate(page=page, per_page=20).items
+    paginate = Image.objects(**query_set).exclude('ok_list', 'no_list',).paginate(page=page, per_page=15)
+    ms = paginate.items
+    p = 0
+    while paginate.has_next and p < 3:
+        p += 1
+        paginate = paginate.next()
+
     data = [m.api_data() for m in ms]
     return json.dumps(dict(
         code=0,
         data=data,
+        page=page,
+        next=p,
     ))
 
 
