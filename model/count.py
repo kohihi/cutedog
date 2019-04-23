@@ -8,19 +8,15 @@ class Count(db.Document):
     @classmethod
     def get_number(cls, model):
         model_name = model.__name__.lower()
-        query_set = Count.objects(model=model_name)
-        if len(query_set) is 0:
-            print("count is []")
+        count = Count.objects(model=model_name).first()
+        if not count:
             count = Count(
                 model=model_name,
                 count=10000,
             )
             count.save()
-            model_number = 10000
+            return count.count
         else:
-            print('count is not []')
-            count = query_set[0]
-            model_number = count.count + 1
-            count.count = model_number
-            count.save()
-        return model_number
+            number = count.count + 1
+            count.update(count=number)
+            return number
