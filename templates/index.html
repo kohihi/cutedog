@@ -12,45 +12,47 @@
     <div id="app">
         <h1>汪喵贴图板</h1>
         <ul class="nav nav-tabs">
+            <li role="presentation"><a href="/">>>ALL<<</a></li>
             <li role="presentation"><a href="/dog">>>>汪<<<</a></li>
             <li role="presentation"><a href="/cat">>>>喵<<<</a></li>
             <li role="presentation"><a href="/other">>>>其他<<<</a></li>
         </ul>
         <hr>
         <ol class="feed">
-            {% for m in ms %}
-            <li class="item">
+            <li class="item" v-for="img in imgList" :key="img.img_id">
                 <div class="img_id">
-                    #{{ m.img_id }}
+                    #{{img.img_id}}
                 </div>
                 <div class="row">
                     <div class="post_info">
-                        <label class="user_name">{{ m.author }}</label>
+                        <label class="user_name">{{img.author}}</label>
                         <!-- <label class="timestamp">12小时前</label> -->
                     </div>
                     <div class="text">
-                        {% for u in m.url %}
-                        <img src="{{ u }}" alt="">
-                        {% endfor %}
+                        <img :src="u" alt="" v-for="u in img.url">
                     </div>
                 </div>
-                <div class="comment" data-imgId={{ m.img_id }}>
-                    <a id="ok" v-on:click="voteOk">我觉得可以 - {{ m.ok }}</a>
-                    <a id="no" v-on:click="voteNo">我觉得不行 - {{ m.no }}</a>
-                    <a id="comment">吐槽 - {{ m.comments|length }}</a>
-                    {% for c in m.comments %}
-                    <li>
-                        {{ c.author }} - {{ c.content }}
-                    </li>
-                    {% endfor %}
+                <div class="comment" :data-imgId="img.img_id">
+                    <div style="text-align: right; padding-right: 50px; margin: 5px 0px 10px 0px;">
+                        <a id="ok" class="a-button" v-on:click="voteOk">我觉得可以 {{img.ok}}</a>
+                        <a id="no" class="a-button" v-on:click="voteNo"> / 我觉得不行 {{img.no}}</a>
+                        <a id="comment" class="a-button" v-on:click="getComments"> / 吐槽 {{img.comments_num}}</a>
+                    </div>
+                    <transition name="fade">
+                    <div v-show="show[img.img_id]">
+                        <div class="comments" v-for="c in comments[img.img_id]">
+                            <label class="user_name">{{c.author}}</label>
+                            <span>{{c.content}}</span>
+                        </div>
+                    </div>
+                    </transition>
                 </div>
             </li>
-            {% endfor %}
         </ol> 
         <div class="right-side">
             投稿方式：<br>
             将图片链接贴到下方输入框<br>
-            一次提交多个链接用英文分号（;）分割
+            一次提交多个链接用英文分号 ; 分割
             <hr>
             给自己取一个名字？
             <input type="text" id="author">
@@ -63,5 +65,5 @@
         </div>
     </div>
     <script type="text/javascript" src="/static/js/vue.js"></script>
-    </body> 
+    </body>
 </html>

@@ -2,6 +2,11 @@ body {
     width: 1200px;
     margin: auto;
 }
+
+.a-button {
+    cursor: pointer;
+}
+
 .nav>li {
     list-style-type: none;
     display: inline;
@@ -51,10 +56,9 @@ body {
     font-size: 13px;
     color: #999;
 }
-.post_info>.user_name {
+.user_name {
     display: block;
     font-weight: 600;
-    margin: 5 0 5 0;
 }
 .post_info>.timestamp {
     font-size: 13px;
@@ -71,12 +75,36 @@ body {
     color: #000;
     text-decoration: none;
 }
-.comment>#ok {
-    color: #F08;
+#ok {
+    color: #c86432;
 }
-.comment>#no {
-    color: #6BF;
+#no {
+    color: #3264c8;
 }
-.comment>#ok:hover, .comment>#no:hover {
-    font-weight: 600;
+#ok:hover, #no:hover {
+    color: #ff6432;
+    font-weight: 550;
 }
+#no:hover {
+    color: #3232ff;
+    font-weight: 550;
+}
+.comment .comments {
+    border-top: dashed 1px #999;
+    padding: 10px 10px 10px 0px;
+    margin-left: 10px;
+    min-height: 45px;
+}
+.comments>span {
+    margin-left: 5px;
+    margin-top: 8px;
+}
+
+/* ↓↓↓↓过渡动画效果↓↓↓↓ */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+/* ↑↑↑↑过渡动画效果↑↑↑↑ */
