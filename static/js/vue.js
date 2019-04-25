@@ -8,11 +8,39 @@ var app = new Vue({
 		current_page: 0,
 		max_page: 0,
 		current_board: 'all',
-		author: 'Anonymous'
+		author: 'Anonymous',
+		message:"",
+		alert: false
 	},
 	mounted() {
 		this.getImg(1)
-		this.author = getCookie('author')
+		var author = getCookie('author')
+		if (author != "") {
+			this.author = author
+		}
+	},
+	filters: {
+		dateFormat: function(value) {
+			var a = new Date() - new Date(value)
+			a = parseInt(a/1000)
+			if (a > 2592000) {
+				return value.split(" ")[0]
+			} 
+			if (a > 86400) {
+				return (parseInt(a / 86400)+"天前")
+			}
+			if (a > 3600) {
+				return(parseInt(a / 3600)+"小时前")
+			}
+			if (a > 60) {
+				return(parseInt(a / 60)+"分钟前")
+			}
+			if (a > 0) {
+				return(a+"秒前")
+			} else {
+				return("刚刚")
+			}
+		}
 	},
 	methods: {
 		getImg: function(page, board='all') {
@@ -63,10 +91,11 @@ var app = new Vue({
 				"author": this.author
 			}
 			var path = `/api/image`
+			var that = this
 			ajax("POST", path, data, function(r) {
 				r = JSON.parse(r)
 				if (r.code == 0) {
-                    alert("is ok")
+                    that.alertText("已提交")
                 } else {
                     alert("not ok")
                 }
@@ -90,7 +119,6 @@ var app = new Vue({
 			ajax("POST", path, data, function(r) {
 				r = JSON.parse(r)
 				if (r.code == 0) {
-                    alert("ok")
                     that.comments[img_id].push(r.data)
                     e("#CTA-"+img_id).value = ""
                 } else {
@@ -99,7 +127,7 @@ var app = new Vue({
 			})
 		},
 
-		voteOk: function(index, event) {
+		voteW: function(index, event) {
 			var data = {
 				"img_id": parseInt(event.target.parentElement.parentElement.dataset.imgid),
 				"type": 1,
@@ -109,28 +137,29 @@ var app = new Vue({
 			ajax("PUT", path, data, function(r) {
 				r = JSON.parse(r)
 				if (r.code == 0) {
-					that.imgList[index].ok += 1
-					alert("投票成功")
+					that.imgList[index].w += 1
+					that.alertText("汪!")
 				} else {
-					alert(r.code)
+					that.alertText("已经点过汪了")
 				}
 
 			})
 		},
 
-		voteNo: function(index, event) {
+		voteM: function(index, event) {
 			var data = {
 				"img_id": parseInt(event.target.parentElement.parentElement.dataset.imgid),
 				"type": 0,
 			}
 			var path = `/api/vote`
+			var that = this
 			ajax("PUT", path, data, function(r) {
 				r = JSON.parse(r)
 				if (r.code == 0) {
-					that.imgList[index].no += 1
-					alert("投票成功")
+					that.imgList[index].m += 1
+					that.alertText("喵~")
 				} else {
-					alert(r.code)
+					that.alertText("已经点过喵了")
 				}
 
 			})
@@ -158,6 +187,14 @@ var app = new Vue({
 			this.author = a
 			e("#author").value = ""
 		},
+
+		alertText: function(text) {
+			this.message = text
+			this.alert = true
+			var t = setTimeout(() => {
+				this.alert = false
+			}, 2000, t)
+		},
+
 	}
 })
-

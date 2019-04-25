@@ -48,13 +48,3 @@ var getCookie = function(c_name) {
     }
   return ""
 }
-
-
-// api方法示例
-var apiBriefingInfo = function(bid, callBack) {
-    var args = {
-        "briefing_id": bid,
-    }
-    var path = `/api/briefing`
-    ajax("GET", path, args, callBack)
-}
