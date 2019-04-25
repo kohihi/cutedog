@@ -51,16 +51,20 @@ def vote():
         return json.dumps(dict(
             code=10001,
         ))
-    if client_ip in image.ok_list or client_ip in image.no_list:
-        return json.dumps(dict(
-            code=10002,
-        ))
     if vote_type is 1:
-        # 我觉得ok
-        image.update(push__ok_list=client_ip, ok=image.ok+1)
+        # 我觉得汪
+        if client_ip in image.w_list:
+            return json.dumps(dict(
+                code=10002,
+            ))
+        image.update(push__w_list=client_ip, w=image.w+1)
     elif vote_type is 0:
-        # 我觉得不行
-        image.update(push__no_list=client_ip, no=image.no+1)
+        # 我觉得喵
+        if client_ip in image.m_list:
+            return json.dumps(dict(
+                code=10002,
+            ))
+        image.update(push__m_list=client_ip, m=image.m+1)
     else:
         return json.dumps(dict(
             code=10003
@@ -107,7 +111,7 @@ def get_image():
         page = int(request.args.get('page'))
     except ValueError as e:
         page = 1
-    paginate = Image.objects(**query_set).exclude('ok_list', 'no_list',).paginate(page=page, per_page=15)
+    paginate = Image.objects(**query_set).exclude('w_list', 'm_list',).paginate(page=page, per_page=15)
     ms = paginate.items
     p = 0
     while paginate.has_next and p < 3:
