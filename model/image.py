@@ -5,7 +5,7 @@ from datetime import datetime
 class Comment(db.EmbeddedDocument):
     content = db.StringField(max_length=512)
     author = db.StringField()
-    ct = db.DateTimeField(default=datetime.now())
+    ct = db.DateTimeField(default=datetime.now)
 
     def api_data(self):
         return dict(
@@ -25,10 +25,10 @@ class Image(db.Document):
     url = db.ListField(db.StringField())
     author = db.StringField()
     board = db.StringField()
-    ok_list = db.ListField(db.StringField())
-    no_list = db.ListField(db.StringField())
-    ok = db.IntField(default=0)
-    no = db.IntField(default=0)
+    w_list = db.ListField(db.StringField())
+    m_list = db.ListField(db.StringField())
+    w = db.IntField(default=0)
+    m = db.IntField(default=0)
     comments = db.ListField(db.EmbeddedDocumentField(Comment))
     visible = db.BooleanField()
     ct = db.DateTimeField(default=datetime.now)
@@ -38,8 +38,8 @@ class Image(db.Document):
             img_id=self.img_id,
             url=self.url,
             author=self.author,
-            ok=self.ok,
-            no=self.no,
+            w=self.w,
+            m=self.m,
             ct=self.ct.__str__(),
             comments_num=len(self.comments),
         )
