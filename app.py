@@ -1,33 +1,21 @@
-from flask import (
-    Flask,
-    # jsonify,
-)
-# from werkzeug.wrappers import Response
-#
-#
-# class JsonResponse(Response):
-#     @classmethod
-#     def force_type(cls, response, environ=None):
-#         if isinstance(response, dict):
-#             response = jsonify(response)
-#         return super(JsonResponse, cls).force_type(response, environ)
+from flask import Flask
+from config import settings
+from flask_mongoengine import MongoEngine
+
+db = MongoEngine()
 
 
-def create_app():
-    r = Flask(__name__)
-    r.secret_key = "^&*jh_jhf_d_kas("
+def create_app(config_name):
+    app = Flask(__name__)
+    app.config.from_object(settings[config_name])
 
-    r.config['MONGODB_SETTINGS'] = {
-        'db': 'Wang',
-        'host': '127.0.0.1',
-        'port': 27017
-    }
-    # r.response_class = JsonResponse
+    app.jinja_env.variable_start_string = '{{ '
+    app.jinja_env.variable_end_string = ' }}'
+    from routes.api import main as route_api
+    from routes.index import main as route_index
+    app.register_blueprint(route_index, url_prefix="/")
+    app.register_blueprint(route_api, url_prefix="/api")
 
-    r.jinja_env.variable_start_string = '{{ '
-    r.jinja_env.variable_end_string = ' }}'
+    db.init_app(app)
 
-    return r
-
-
-app = create_app()
+    return app

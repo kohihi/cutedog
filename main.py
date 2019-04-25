@@ -1,13 +1,9 @@
-from app import app
-from routes.index import main as route_index
-from routes.api import main as route_api
+from app import create_app
+from os import getenv
 
-app.register_blueprint(route_index)
-app.register_blueprint(route_api, url_prefix='/api')
+app = create_app(getenv("ENV_KOHI", "dev"))
 
 if __name__ == "__main__":
     app.run(
-        port=9001,
-        host="0.0.0.0",
-        debug=False,
+        port=9001
     )
