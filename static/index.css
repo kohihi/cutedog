@@ -4,6 +4,9 @@ body {
     font-size: 18px;
     margin: 0px;
 }
+textarea {
+    font-size: 18px;
+}
 .text-logo {
     padding-top: 30px;
     padding-bottom: 20px;
@@ -68,7 +71,7 @@ body {
     float: left;
 }
 .right-side {
-    width: 410px;
+    width: 518px;
     display: block;
     float: left;
     margin-left: 20px;
@@ -148,12 +151,15 @@ body {
 }
 .button-submit {
     margin-top: 3px;
-    width: 408px;
-    height: 35px;
-    background: #DDD;
+    width: 99%;
+    height: 40px;
+    background: #FEDFE1;
     border: none;
     color: #666;
     font-size: 22px;
+}
+.button-submit:hover {
+    background: #FEFFEF;
 }
 .flash-message {
     background-color: #000000dd;

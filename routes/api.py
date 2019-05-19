@@ -22,6 +22,7 @@ def post_image():
         img_id=Count.get_number(Image),
         author=author,
         board=data.get('board', 'other'),
+        word=data.get('word', ''),
         url=data.get('url').split(";"),
         visible=False,
     )

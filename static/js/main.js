@@ -132,15 +132,17 @@ var app = new Vue({
 		},
 
 		submitUrl: function() {
-			var url = e("#url-text").value
+			var url = e("#text-url").value
+			var word=((e('#text-word').value.replace(/<(.+?)>/gi,"&lt;$1&gt;")).replace(/ /gi,"&nbsp;")).replace(/\n/gi,"<br>")
 			var board = e("#select-board").value
 			const regex = /^\s*$/
 			if (regex.test(url)) {
 				return
 			}
 			var data = {
-				"url": url,
 				"author": this.author,
+				"url": url,
+				"word": word,
 				"board": board
 			}
 			var path = `/api/image`

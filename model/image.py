@@ -23,6 +23,7 @@ class Image(db.Document):
     }
     img_id = db.IntField()
     url = db.ListField(db.StringField())
+    word = db.StringField(max_length=512)
     author = db.StringField()
     board = db.StringField()
     w_list = db.ListField(db.StringField())
@@ -37,6 +38,7 @@ class Image(db.Document):
         return dict(
             img_id=self.img_id,
             url=self.url,
+            word=self.word,
             author=self.author,
             w=self.w,
             m=self.m,
