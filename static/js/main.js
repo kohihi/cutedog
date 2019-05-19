@@ -133,13 +133,15 @@ var app = new Vue({
 
 		submitUrl: function() {
 			var url = e("#url-text").value
+			var board = e("#select-board").value
 			const regex = /^\s*$/
 			if (regex.test(url)) {
 				return
 			}
 			var data = {
 				"url": url,
-				"author": this.author
+				"author": this.author,
+				"board": board
 			}
 			var path = `/api/image`
 			var that = this

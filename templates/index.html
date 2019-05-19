@@ -9,6 +9,14 @@
         <style  type="text/css">
             [v-cloak] {display: none;}
         </style>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101079172-2"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'UA-101079172-2');
+        </script>
     </head>
     <body>
     <div>
@@ -96,11 +104,17 @@
                 <li>一次提交多个链接用英文分号“;”分割。</li>
                 <li>网站的主题是阿猫阿狗与其他可爱动物。</li>
                 <br>
-                <textarea class="post" name="post" id="url-text" cols="55" rows="10"></textarea>
+                投稿到：
+                <select id="select-board">
+                    <option value = "dog">汪</option>
+                    <option value = "cat">喵</option>
+                    <option value = "other">其他</option>
+                </select>
+                <textarea class="post" name="post" id="url-text" cols="55" rows="7"></textarea>
                 <button v-on:click="submitUrl" class="button-submit">提交</button>
                 <hr>
                 <li>
-                本页面图片皆为用户发布，适用避风港原则。如有涉嫌侵权图片，请邮件联系admin@wangmiao.me，告知图片URL或者图片所在楼层(右上角的)编号以及侵权证据。
+                本页面图片皆为用户发布，适用避风港原则。如有涉嫌侵权图片，请邮件联系admin@wangmiao.me，告知图片URL或者图片所在楼层(左上角的)编号以及侵权证据。
                 </li>
             </div>
             <transition name="fade">
