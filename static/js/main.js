@@ -132,8 +132,10 @@ var app = new Vue({
 		},
 
 		submitUrl: function() {
-			var url = e("#text-url").value
-			var word=((e('#text-word').value.replace(/<(.+?)>/gi,"&lt;$1&gt;")).replace(/ /gi,"&nbsp;")).replace(/\n/gi,"<br>")
+			var inputUrl = e("#text-url")
+			var inputWord = e('#text-word')
+			var url = inputUrl.value
+			var word=((inputWord.value.replace(/<(.+?)>/gi,"&lt;$1&gt;")).replace(/ /gi,"&nbsp;")).replace(/\n/gi,"<br>")
 			var board = e("#select-board").value
 			const regex = /^\s*$/
 			if (regex.test(url)) {
@@ -151,11 +153,12 @@ var app = new Vue({
 				r = JSON.parse(r)
 				if (r.code == 0) {
                     that.alertText("已提交")
+                    inputUrl.value = ""
+                    inputWord.value = ""
                 } else {
                     alert("not ok")
                 }
 			})
-			e("#url-text").value = ""
 		},
 
 		submitComment: function(img_id) {
