@@ -109,7 +109,7 @@ var app = new Vue({
 					that.current_board = board
 					that.max_page = r.next
 				} else {
-					alert(code)
+					alert("error:code" + r.code)
 				}
 			})
 		},
@@ -126,7 +126,7 @@ var app = new Vue({
 				if (r.code == 0) {
 					Vue.set(that.comments, params.img_id, r.data)
 				} else {
-					alert(code)
+					alert("error:code" + r.code)
 				}
 			})
 		},
@@ -156,7 +156,7 @@ var app = new Vue({
                     inputUrl.value = ""
                     inputWord.value = ""
                 } else {
-                    alert("not ok")
+                    alert("error:code" + r.code)
                 }
 			})
 		},
@@ -180,7 +180,7 @@ var app = new Vue({
                     that.comments[img_id].push(r.data)
                     e("#CTA-"+img_id).value = ""
                 } else {
-                    alert("not ok:" + r.code)
+                    alert("error:code" + r.code)
                 }
 			})
 		},
