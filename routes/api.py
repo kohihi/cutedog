@@ -1,6 +1,7 @@
 from flask import (
     request,
     Blueprint,
+    session,
 )
 import json
 from model.count import Count
@@ -141,3 +142,13 @@ def get_comment():
         code=0,
         data=data,
     ))
+
+
+@main.route('/chat/enter', methods=['POST'])
+def enter_chat():
+    data = request.get_json()
+    name = data.get('name')
+    session['name'] = name
+    return json.dumps(dict(
+            code=0,
+        ))

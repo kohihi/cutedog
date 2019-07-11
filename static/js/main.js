@@ -49,6 +49,34 @@ var getCookie = function(c_name) {
   return ""
 }
 
+var socket = null
+
+var current_channel = ''
+
+var clear_board = function() {
+    $("#id_chat_area").val('');
+}
+
+
+var socketInit = function() {
+	socket = io.connect('ws://' + document.domain + ':' + location.port + '/chat');
+    socket.on('connect', function() {
+        console.log('connect');
+        clear_board();
+    });
+
+    socket.on('status', function(data) {
+        $('#id_chat_area').val($('#id_chat_area').val() + '<' + data.msg + '>\n');
+        //$('#chat').scrollTop($('#chat')[0].scrollHeight);
+    });
+    socket.on('message', function(data) {
+        $('#id_chat_area').val($('#id_chat_area').val() + data.msg + '\n');
+        //$('#chat').scrollTop($('#chat')[0].scrollHeight);
+    });
+
+    socket.emit('joined', {msg:current_channel})
+}
+
 var app = new Vue({
 	el: '#app',
 	data: {
@@ -61,7 +89,9 @@ var app = new Vue({
 		current_board: 'all',
 		author: 'Anonymous',
 		message:"",
-		alert: false
+		alert: false,
+		linked: false,
+		linkText: "LINK START"
 	},
 	mounted() {
 		this.getImg(1)
@@ -252,6 +282,57 @@ var app = new Vue({
 			var t = setTimeout(() => {
 				this.alert = false
 			}, 2000, t)
+		},
+
+		enterChat: function() {
+			if(this.linked) {
+				this.disconnect()
+				return
+			}
+			if(socket != null) {
+				this.linked = true
+				this.linkText = "disconnect"
+				current_channel = "wangmiao"
+				socket.emit('joined', {msg:current_channel})
+				return
+			}
+			var data = {
+				"name": this.author
+			}
+			var path = `/api/chat/enter`
+			var that = this
+			ajax("POST", path, data, function(r) {
+				r = JSON.parse(r)
+				if (r.code == 0) {
+					that.alertText("连接成功")
+					current_channel = 'wangmiao'
+					socketInit()
+					that.linked = true
+					that.linkText = "disconnect"
+				} else {
+					that.alertText("连接失败")
+				}
+
+			})
+		},
+
+		sendMsg: function() {
+			if(current_channel == "") {
+				this.alertText("尚未与服务器连接")
+				return
+			}
+			var text = e('#id_chat_text').value
+			text = encodeURI(text)
+			e('#id_chat_text').value = ""
+			socket.emit('text', {msg: text, room:current_channel})
+		},
+
+		disconnect: function() {
+			socket.emit('left', {msg:current_channel})
+			this.linked = false
+			this.linkText = "LINK START"
+			current_channel = ""
+			clear_board()
 		},
 
 	}

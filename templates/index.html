@@ -6,6 +6,8 @@
         </title>
         <link rel="stylesheet" href="/static/index.css">
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
         <style  type="text/css">
             [v-cloak] {display: none;}
         </style>
@@ -126,6 +128,12 @@
                 <li>
                 本页面图片皆为用户发布，适用避风港原则。如有涉嫌侵权图片，请邮件联系admin@wangmiao.me，告知图片URL或者图片所在楼层(左上角的)编号以及侵权证据。
                 </li>
+                <hr>
+                使用 {{author}} 为昵称接入在线聊天<button href="#" v-on:click="enterChat">{{linkText}}</button>
+                <br>
+                <textarea class="post" id="id_chat_area" cols="55" rows="12" placeholder="没有消息..." readonly="readonly">
+                </textarea>
+                <input id="id_chat_text" name="message" size="70" placeholder="在这里打字..." @keyup.enter="sendMsg">
             </div>
             <transition name="fade">
             <div class="flash-message" v-if="alert">
