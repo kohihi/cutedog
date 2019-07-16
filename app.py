@@ -1,26 +1,20 @@
 from flask import Flask
 from config import settings
 from flask_mongoengine import MongoEngine
-from flask_socketio import SocketIO
+from os import getenv
 
 db = MongoEngine()
-socketio = SocketIO()
 
 
-def create_app(config_name):
-    app = Flask(__name__)
-    app.config.from_object(settings[config_name])
+def create_app():
+    config_name = getenv("ENV_KOHI", "dev")
+    a = Flask(__name__)
+    a.config.from_object(settings[config_name])
+    a.jinja_env.variable_start_string = '{{ '
+    a.jinja_env.variable_end_string = ' }}'
 
-    app.jinja_env.variable_start_string = '{{ '
-    app.jinja_env.variable_end_string = ' }}'
-    from routes.api import main as route_api
-    from routes.index import main as route_index
-    from routes.events import main as route_socket
-    app.register_blueprint(route_index, url_prefix="/")
-    app.register_blueprint(route_api, url_prefix="/api")
-    app.register_blueprint(route_socket)
+    db.init_app(a)
+    return a
 
-    db.init_app(app)
-    socketio.init_app(app)
 
-    return app
+app = create_app()

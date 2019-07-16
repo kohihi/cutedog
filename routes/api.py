@@ -113,6 +113,7 @@ def get_image():
         page = int(request.args.get('page'))
     except ValueError as e:
         page = 1
+        print(e.args)
     paginate = Image.objects(**query_set).exclude('w_list', 'm_list',).paginate(page=page, per_page=15)
     ms = paginate.items
     p = 0
@@ -142,13 +143,3 @@ def get_comment():
         code=0,
         data=data,
     ))
-
-
-@main.route('/chat/enter', methods=['POST'])
-def enter_chat():
-    data = request.get_json()
-    name = data.get('name')
-    session['name'] = name
-    return json.dumps(dict(
-            code=0,
-        ))

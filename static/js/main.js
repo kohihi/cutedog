@@ -49,33 +49,38 @@ var getCookie = function(c_name) {
   return ""
 }
 
-var socket = null
-
-var current_channel = ''
 
 var clear_board = function() {
     $("#id_chat_area").val('');
 }
 
+const socket = io.connect('ws://' + document.domain + ':' + location.port + '/chat');
+socket.on('connect', function() {
+    console.log('connect');
+    clear_board();
+});
 
-var socketInit = function() {
-	socket = io.connect('ws://' + document.domain + ':' + location.port + '/chat');
-    socket.on('connect', function() {
-        console.log('connect');
-        clear_board();
-    });
+socket.on('status', function(data) {
+    $('#id_chat_area').val($('#id_chat_area').val() + '<' + data.msg + '>\n');
+    $('#id_chat_area').scrollTop($('#id_chat_area')[0].scrollHeight);
+});
+socket.on('message', function(data) {
+	console.log("message")
+    $('#id_chat_area').val($('#id_chat_area').val() + data.msg + '\n');
+    $('#id_chat_area').scrollTop($('#id_chat_area')[0].scrollHeight);
+});
+socket.on('update_online', function(data) {
+	console.log("update")
+	$('#id_current_online').text(data.msg)
+});
+socket.on('error_handler', function(data) {
+	console.log('has error')
+	if(data.code == 10000) {
+		return
+	}
+	alert(data.msg)
+});
 
-    socket.on('status', function(data) {
-        $('#id_chat_area').val($('#id_chat_area').val() + '<' + data.msg + '>\n');
-        //$('#chat').scrollTop($('#chat')[0].scrollHeight);
-    });
-    socket.on('message', function(data) {
-        $('#id_chat_area').val($('#id_chat_area').val() + data.msg + '\n');
-        //$('#chat').scrollTop($('#chat')[0].scrollHeight);
-    });
-
-    socket.emit('joined', {msg:current_channel})
-}
 
 var app = new Vue({
 	el: '#app',
@@ -88,16 +93,23 @@ var app = new Vue({
 		max_page: 0,
 		current_board: 'all',
 		author: 'Anonymous',
+		chatName: 'Anonymous',
+		hasChatName: false,
+		chatChannel: 'wangmiao',
 		message:"",
 		alert: false,
-		linked: false,
-		linkText: "LINK START"
+		joined: false,
+		joinBtnText: "LINK START"
 	},
 	mounted() {
 		this.getImg(1)
 		var author = getCookie('author')
 		if (author != "") {
 			this.author = author
+		}
+		var chatName = getCookie('chatName')
+		if (chatName != "") {
+			this.chatName = chatName
 		}
 	},
 	filters: {
@@ -284,56 +296,47 @@ var app = new Vue({
 			}, 2000, t)
 		},
 
-		enterChat: function() {
-			if(this.linked) {
-				this.disconnect()
-				return
+		joinRoLeftRoom: function() {
+			if(this.joined) {
+				socket.emit('left', {room:this.chatChannel, name:encodeURI(this.chatName)})
+				this.joined = false
+				this.joinBtnText = "进入房间"
+				var msg = "<你已离开房间>"
+				$('#id_chat_area').val($('#id_chat_area').val() + msg + '\n');
+    			$('#id_chat_area').scrollTop($('#id_chat_area')[0].scrollHeight);
+			} else {
+				socket.emit('joined', {room:this.chatChannel, name:encodeURI(this.chatName)})
+				this.joined = true
+				this.joinBtnText = "离开房间"
 			}
-			if(socket != null) {
-				this.linked = true
-				this.linkText = "disconnect"
-				current_channel = "wangmiao"
-				socket.emit('joined', {msg:current_channel})
-				return
-			}
-			var data = {
-				"name": this.author
-			}
-			var path = `/api/chat/enter`
-			var that = this
-			ajax("POST", path, data, function(r) {
-				r = JSON.parse(r)
-				if (r.code == 0) {
-					that.alertText("连接成功")
-					current_channel = 'wangmiao'
-					socketInit()
-					that.linked = true
-					that.linkText = "disconnect"
-				} else {
-					that.alertText("连接失败")
-				}
-
-			})
 		},
 
 		sendMsg: function() {
-			if(current_channel == "") {
-				this.alertText("尚未与服务器连接")
+			if(this.joined == false) {
+				this.alertText("未进入房间")
 				return
 			}
 			var text = e('#id_chat_text').value
 			text = encodeURI(text)
 			e('#id_chat_text').value = ""
-			socket.emit('text', {msg: text, room:current_channel})
+			socket.emit('text', {msg:text, room:this.chatChannel, name:encodeURI(this.chatName)})
 		},
 
 		disconnect: function() {
-			socket.emit('left', {msg:current_channel})
-			this.linked = false
-			this.linkText = "LINK START"
-			current_channel = ""
+			socket.disconnect()
+			this.joined = false
+			this.joinBtnText = "LINK START"
 			clear_board()
 		},
 
+		setChatName: function() {
+			var a = e("#id_chat_name").value
+			const regex = /^\s*$/
+			if (regex.test(a)) {
+				this.alertText("名字不能全是空白符")
+				return
+			}
+			this.chatName = a
+		},
 	}
 })

@@ -10,3 +10,5 @@ class Development:
 
     # 自己的配置
     LWG_HOST = "http://127.0.0.1:9001"
+
+    CHAT_ROOM_MAX_NUM = 100

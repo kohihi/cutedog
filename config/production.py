@@ -9,3 +9,4 @@ class Production:
 
     # 自己的配置
     LWG_HOST = "http://www.wangmiao.me"
+    CHAT_ROOM_MAX_NUM = 100
