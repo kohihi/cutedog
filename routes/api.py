@@ -46,6 +46,8 @@ def vote():
     data = request.get_json()
     img_id = data.get('img_id')
     client_ip = request.headers.get("real_ip")
+    if client_ip is None:
+        client_ip = request.remote_addr
     vote_type = data.get('type')
     image = Image.objects(img_id=img_id).first()
     if not image:
